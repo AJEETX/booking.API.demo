@@ -1,12 +1,12 @@
 ﻿using Demo.API.Model;
-using System.Linq;
+using System;
 using System.Threading.Tasks;
 
 namespace Demo.API.Datasource
 {
     public interface IRepository
     {
-        Task<bool> IsAvailable(Booking booking);
+        Task<BookingResponse> IsAvailable(Booking booking);
     }
     public class Repository : IRepository
     {
@@ -15,9 +15,22 @@ namespace Demo.API.Datasource
         {
             _sampleBookingData = sampleBookingData;
         }
-        public async Task<bool> IsAvailable(Booking booking)
+        public async Task<BookingResponse> IsAvailable(Booking booking)
         {
-            return await _sampleBookingData.IsAvaiable(booking);
+            BookingResponse bookingResponse = null;
+
+            if (booking == null) return bookingResponse; // always validate the data first before taking it down
+
+            try
+            {
+                bookingResponse= await _sampleBookingData.IsAvailable(booking);
+            }
+            catch (Exception)
+            {
+                //yell / shout //catch // log
+            }
+
+            return bookingResponse;
         }
     }
 }

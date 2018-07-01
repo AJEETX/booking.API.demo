@@ -1,4 +1,5 @@
-﻿using Demo.API.Model;
+﻿using System;
+using Demo.API.Model;
 using Demo.API.Service;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
@@ -19,13 +20,19 @@ namespace Demo.API.Controllers
         {
             if (startdate == null || enddate == null || pax == null) return BadRequest();
 
-            bool bookingAvailable = false;
+            BookingResponse bookingResponse = null;
 
             var booking = new Booking { StartDate = startdate, EndDate = enddate, NoOfPax = pax };
+            try
+            {
+                bookingResponse = await _bookingService.IsAvailable(booking);
+            }
+            catch (Exception)
+            {
+                //yell / shout //catch // log
+            }
 
-            bookingAvailable=await _bookingService.IsAvailable(booking);
-
-            return Ok(bookingAvailable);
+            return Ok(bookingResponse);
         }
     }
 }

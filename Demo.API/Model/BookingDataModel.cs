@@ -15,4 +15,9 @@ namespace Demo.API.Model
         public string EndDate { get; set; }
         public int NoOfPax { get; set; }
     }
+    public class BookingResponse
+    {
+        public bool IsAvailable { get; set; }
+        public string ResponseInfo { get; set; }
+    }
 }

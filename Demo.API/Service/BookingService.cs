@@ -7,7 +7,7 @@ namespace Demo.API.Service
 {
     public interface IBookingService
     {
-        Task<bool> IsAvailable(Booking booking);
+        Task<BookingResponse> IsAvailable(Booking booking);
     }
     public class BookingService : IBookingService
     {
@@ -16,31 +16,42 @@ namespace Demo.API.Service
         {
             _repository = repository;
         }
-        public async Task<bool> IsAvailable(Booking booking)
+        public async Task<BookingResponse> IsAvailable(Booking booking)
         {
-            bool bookingAvailable = false;
+            BookingResponse bookingResponse = null;
 
-            if (booking == null) return bookingAvailable;
+            if (booking == null) return bookingResponse; // always validate the data first before taking it down
 
             return await FindBooking(booking);
         }
-        async Task<bool> FindBooking(Booking booking)
+        async Task<BookingResponse> FindBooking(Booking booking)
         {
-            bool available = false;
+            BookingResponse bookingResponse = null;
 
-            if (int.TryParse(booking.NoOfPax, out int Pax))
-                if (Pax == 0) return available;
-
-            if (DateTime.TryParse(booking.StartDate, out DateTime startDate) && DateTime.TryParse(booking.EndDate, out DateTime endDate))
+            try
             {
-                var bookingData = new Booking {
-                    StartDate =startDate.ToString("dd-MM-yyyy"),
-                    EndDate =endDate.ToString("dd-MM-yyyy"),
-                    NoOfPax=booking.NoOfPax
-                };
-                available =await _repository.IsAvailable(bookingData);
+                if (int.TryParse(booking.NoOfPax, out int Pax))
+                    if (Pax == 0) return bookingResponse;
+
+                if (DateTime.TryParse(booking.StartDate, out DateTime startDate) && DateTime.TryParse(booking.EndDate, out DateTime endDate))
+                {
+                    if (startDate > endDate) return bookingResponse; //end date to be on after the start date
+
+                    var bookingData = new Booking{
+                        StartDate = startDate.ToString("dd-MM-yyyy"),
+                        EndDate = endDate.ToString("dd-MM-yyyy"),
+                        NoOfPax = booking.NoOfPax
+                    };
+
+                    bookingResponse = await _repository.IsAvailable(bookingData);
+                }
             }
-            return available;
+            catch (Exception)
+            {
+                //yell / shout //catch // log
+            }
+
+            return bookingResponse;
         }
     }
 }

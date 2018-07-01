@@ -23,18 +23,18 @@ The repository consists of 2 project:
 - Open the solution file in VS2017
 - run the application 
 - provide the search request parameters in uri as below:
-- the response is true or false
+- the response object[ResponseBooking] contain true if booking is available or otherwise
 ```
-	http://localhost:54986/api/booking/4-07-2018/4-07-2018/2
+	http://localhost:5000/api/booking/4-07-2018/5-07-2018/2
 
-	host = http://localhost:54986/
-	url = api/booking/
+	host = http://localhost:5000/
+	path = api/booking/
 	parameters =  4-07-2018/5-07-2018/2 		
 	first parameter is start date 4-07-2018
 	second parameter is end date 5-07-2018
 	last parameter is no of pax  2
 ```
-
+> Sample data created in datasource is for 10 next days. Modify "noOfDays" in appsetting.json to change.
 
 ### Support or Contact
 

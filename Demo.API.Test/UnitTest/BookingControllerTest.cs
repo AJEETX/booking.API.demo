@@ -20,18 +20,21 @@ namespace Demo.API.Test.UnitTest
             //given
             string date = DateTime.Now.AddDays(1).ToString("dd-MM-yyyy");
             var moqBookingService = new Mock<IBookingService>();
-            moqBookingService.Setup(m => m.IsAvailable(It.IsAny<Booking>())).Returns(Task.FromResult(true));
+            var bookingResponse = new BookingResponse { IsAvailable = true };
+            moqBookingService.Setup(m => m.IsAvailable(It.IsAny<Booking>())).Returns(Task.FromResult(bookingResponse));
             var sut = new BookingController(moqBookingService.Object);
 
             //when
             var result = sut.Get(date, date, "1");
             var okResult = result.Result as OkObjectResult;
-            
+            var response = okResult.Value as BookingResponse;
+
             //then
             Assert.IsInstanceOfType(result, typeof(Task<IActionResult>));
             Assert.IsNotNull(okResult);
             Assert.AreEqual(200, okResult.StatusCode);
-            Assert.AreEqual(true, okResult.Value);
+            Assert.IsNotNull(response);
+            Assert.IsTrue(response.IsAvailable);
         }
 
         [TestMethod]
@@ -39,19 +42,22 @@ namespace Demo.API.Test.UnitTest
         {
             //given
             string date = DateTime.Now.AddDays(1).ToString("dd-MM-yyyy");
+            var bookingResponse = new BookingResponse { IsAvailable = false };
             var moqBookingService = new Mock<IBookingService>();
-            moqBookingService.Setup(m => m.IsAvailable(It.IsAny<Booking>())).Returns(Task.FromResult(false));
+            moqBookingService.Setup(m => m.IsAvailable(It.IsAny<Booking>())).Returns(Task.FromResult(bookingResponse));
             var sut = new BookingController(moqBookingService.Object);
 
             //when
             var result = sut.Get(date, date, "1");
             var okResult = result.Result as OkObjectResult;
+            var response = okResult.Value as BookingResponse;
 
             //then
             Assert.IsInstanceOfType(result, typeof(Task<IActionResult>));
             Assert.IsNotNull(okResult);
             Assert.AreEqual(200, okResult.StatusCode);
-            Assert.AreEqual(false, okResult.Value);
+            Assert.IsNotNull(response);
+            Assert.IsFalse(response.IsAvailable);
         }
     }
 }
