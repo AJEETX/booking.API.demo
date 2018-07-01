@@ -21,18 +21,20 @@ The repository consists of 2 project:
 ## Features
 
 - Open the solution file in VS2017
-- run the application and provide the search parameters in uri as below:
+- run the application 
+- provide the search request parameters in uri as below:
+- the response is true or false
+```
+	http://localhost:54986/api/booking/4-07-2018/4-07-2018/2
 
+	host = http://localhost:54986/
+	url = api/booking/
+	parameters =  4-07-2018/5-07-2018/2 		
+	first parameter is start date 4-07-2018
+	second parameter is end date 5-07-2018
+	last parameter is no of pax  2
 ```
-		http://localhost:54986/api/booking/4-07-2018/4-07-2018/2
-	
-		host = http://localhost:54986/
-		url = api/booking/
-		parameters =  4-07-2018/5-07-2018/2 		
-		first parameter is start date 4-07-2018
-		second parameter is end date 5-07-2018
-		last parameter is no of pax  2
-```
+
 
 ### Support or Contact
 
