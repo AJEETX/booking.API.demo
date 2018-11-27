@@ -18,6 +18,5 @@ namespace Demo.API.Model
     public class BookingResponse
     {
         public bool IsAvailable { get; set; }
-        public string ResponseInfo { get; set; }
     }
 }
